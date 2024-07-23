@@ -1,3 +1,24 @@
+
+/* fantasy-theme.css */
+.navbar-dark.bg-dark {
+  background-color: #333 !important; /* Darker tone for a medieval feel */
+  border-bottom: 2px solid gold; /* Add a touch of gold */
+}
+
+.navbar-brand {
+  font-family: 'DnDFont', serif; /* Use a D&D style font */
+  color: gold !important; /* Gold color for the brand */
+}
+
+.nav-link {
+  font-family: 'DnDFont', serif; /* Consistent font for navigation links */
+  color: #ddd !important; /* Lighter text for contrast */
+}
+
+.nav-link:hover {
+  color: gold !important; /* Gold color on hover */
+}
+
 body {
   background-color: #f4e9d8;
   font-family: 'Times New Roman', serif;
@@ -8,8 +29,9 @@ h1 {
 }
 
 .items-list {
-  list-style-type: none;
-  padding: 0;
+  /* Ensure the list takes the full height if needed */
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .item {
@@ -17,6 +39,10 @@ h1 {
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 8px;
+}
+
+.hide-item {
+  display: none !important;
 }
 
 .item h2 {
@@ -64,3 +90,18 @@ strong {
   text-decoration: none;
   cursor: pointer;
 }
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-content, .right-content {
+  flex: 1;
+}
+
+.left-content {
+  /* Adjust padding or margin as needed */
+  padding-right: 20px;
+}
+

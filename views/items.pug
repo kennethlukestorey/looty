@@ -1,130 +1,43 @@
-doctype html
-html
-  head
-    title Items
-    // Include Bootstrap CSS
-    link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/styles/fantasy-theme.css')
-  body
-    h1 Items
-    
-    // Bootstrap Modal structure
-    div#itemModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='modalLabel', aria-hidden='true')
-      div.modal-dialog(role='document')
-        div.modal-content
-          div.modal-header
-            h5#modalLabel.modal-title Item
-            button.close(type='button', data-dismiss='modal', aria-label='Close')
-              span(aria-hidden='true') &times;
-          div.modal-body
-            form#itemForm
-              input(type='hidden', name='itemId')
-              input(type='text', name='name', placeholder='Item Name', class='form-control')
-              input(type='text', name='details', placeholder='Description', class='form-control')
-              // Moved the Save changes button inside the form
-              button.btn.btn-primary(type='submit') Save changes
-          div.modal-footer
-            button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-    
-    ul.items-list
-          
-    // Button to show add form, now using Bootstrap classes
-    button.btn.btn-success#addNewItemButton() Add Item
 
-    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
-    script(src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js')
-    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')
-    script(src="/js/itemFormHandler.js")
-    script.
-      $(document).ready(function() {
-        // Function to make items editable
-        function makeEditable() {
-          $('.items-list').on('click', '.editable', function() {
-            if ($(this).is('input')) {
-              return;
-            }
+include header.pug
+body
+  
 
-            var $this = $(this);
-            var currentText = $this.text();
-            var inputField = $('<input>', {
-              'type': 'text',
-              'value': currentText,
-              'class': $this.attr('class'), // Preserve the class
-              'data-name': $this.data('name') || $this.data('details'),
-              'blur': function() {
-                var updatedValue = $(this).val();
-                var itemId = $(this).closest('li').data('itemid');
-                var fieldName = $(this).data('name');
+  
+  .flex-container
+    .left-content
+      h1 Items
+      // Button to show add form, now using Bootstrap classes
+      button.btn.btn-success#addNewItemButton() Add Item
+      // Search bar
+      input#itemSearch(type='text', class='form-control mb-3', placeholder='Search items...')
+      ul.items-list.list-group
+      // Your list items will be populated here as before
+    .right-content
+      h1 Containers
+      // Your right side content goes here
+      p Left side content here
+        
 
-                var $span = $('<span>', {
-                  'text': updatedValue,
-                  'class': $(this).attr('class'),
-                  'data-name': fieldName
-                });
-                $(this).replaceWith($span);
-                saveItem(itemId);
-              },
-              'keypress': function(e) {
-                if (e.which === 13) { // Enter key
-                  $(this).blur();
-                }
-              }
-            });
-            $this.replaceWith(inputField);
-            inputField.focus();
-          });
-        }
+  // Bootstrap Modal structure
+  div#itemModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='modalLabel', aria-hidden='true')
+    div.modal-dialog(role='document')
+      div.modal-content
+        div.modal-header
+          h5#modalLabel.modal-title Item
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') &times;
+        div.modal-body
+          form#itemForm
+            input(type='hidden', name='itemId')
+            input(type='text', name='name', placeholder='Item Name', class='form-control')
+            input(type='text', name='details', placeholder='Description', class='form-control')
+            // Moved the Save changes button inside the form
+            button.btn.btn-primary(type='submit') Save changes
+        div.modal-footer
+          button.btn.btn-secondary(type='button', data-dismiss='modal') Close
 
-        function saveItem(itemId){
-          // AJAX call to submit the updated data
-          const itemData = {
-            id: itemId,
-            name: $(`li[data-itemid=${itemId}] .name`).text(),
-            details: $(`li[data-itemid=${itemId}] .details`).text()
-          };
-
-          $.ajax({
-            url: 'items/saveItem',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(itemData),
-            success: function(response) {
-              console.log('Item updated successfully:', response);
-              // Optionally, you can add code here to update the UI based on the response
-            },
-            error: function(xhr, status, error) {
-              console.error('Error updating item:', error);
-              // Optionally, handle errors, such as reverting the change in the UI or displaying an error message
-            }
-          });
-        }
-
-        // Function to populate items list
-        function populateItems() {
-          $.ajax({
-            url: 'items/getItems', // Update this URL to where your items can be fetched
-            type: 'GET',
-            success: function(items) {
-              var $itemsList = $('.items-list');
-              $itemsList.empty(); // Ensure the list is empty before adding items
-              
-              items.forEach(function(item) {
-                var $li = $('<li>', {'class': 'item', 'data-itemId': item.id});
-                var $nameSpan = $('<span>', {'class': 'name editable', 'data-name': 'name', 'text': item.name});
-                var $detailsSpan = $('<span>', {'class': 'details editable', 'data-details': 'details', 'text': item.details});
-                
-                $li.append($nameSpan).append($detailsSpan);
-                $itemsList.append($li);
-              });
-
-              // Call makeEditable after items are populated
-              makeEditable();
-            },
-            error: function(xhr, status, error) {
-              console.error("Error fetching items: ", error);
-            }
-          });
-        }
-
-        populateItems();
-      });
+  script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+  script(src='https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js')
+  script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js')
+  script(src="/js/itemFormHandler.js")

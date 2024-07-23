@@ -6,6 +6,6 @@ exports.getGenreData = (req, res) => {
     db.query('CALL GetGenreData(1)', (err, result) => {
         if (err) throw err;
         // Render the view with the data
-        res.render('genreData', { data: result });
+        res.render('home', { data: result });
     });
 };

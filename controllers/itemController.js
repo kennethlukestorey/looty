@@ -57,19 +57,28 @@ exports.saveItem = async (req, res) => {
   const { id, name, details } = req.body; // Extract updated details from request body
 
   try {
-      // Use the Item model to find and update the item by its ID
-      await Item.findByIdAndUpdate(id, {
-          name,
-          details
-      });
+      // Check if id is 0, indicating a request to create a new item
+      if (id == '0') {
+          // Use the Item model to create a new item
+          await Item.create({
+              name,
+              details
+          });
+      } else {
+          // Use the Item model to find and update the item by its ID
+          await Item.findByIdAndUpdate(id, {
+              name,
+              details
+          });
+      }
 
       // If the operation is successful, redirect to the items list or send a success message
-      res.redirect('/items'); // Assuming '/items' is the route to display the items list
+      // res.redirect('/items'); // Assuming '/items' is the route to display the items list
       // Alternatively, you can send a success message
-      // res.send('Item updated successfully');
+      res.send(id === '0' ? 'Item added successfully' : 'Item updated successfully');
   } catch (error) {
       // Log the error and send an error response
-      console.error('Error updating item:', error);
-      res.status(500).send('Error updating item');
+      console.error('Error processing item:', error);
+      res.status(500).send('Error processing item');
   }
 };

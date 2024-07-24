@@ -17,8 +17,8 @@ class Item {
   static async create(itemData) {
     return new Promise((resolve, reject) => {
       console.log("Arguments passed to create:", itemData); // Debugging line
-      const query = 'INSERT INTO items (name, details) VALUES (?, ?)';
-      db.query(query, [itemData.name, itemData.details], (err, results) => {
+      const query = 'INSERT INTO items (name, details, category_Id) VALUES (?, ?, ?)';
+      db.query(query, [itemData.name, itemData.details, itemData.category_id], (err, results) => {
         if (err) {
           return reject(err);
         }
@@ -56,7 +56,18 @@ class Item {
 
   static async getItemCategories() {
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM item_categories', (err, results) => {
+      db.query('SELECT * FROM itemcategories', (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(results);
+      });
+    });
+  }
+
+  static async getItemDetails(itemId) {
+    return new Promise((resolve, reject) => {
+      db.query('select * from items where item_id=' + itemId, (err, results) => {
         if (err) {
           return reject(err);
         }

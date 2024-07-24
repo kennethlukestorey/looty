@@ -2,6 +2,11 @@ div.d-flex.align-items-center.justify-content-start
   h1.mb-0 Items
   button.btn.btn-success#addNewItemButton.ml-3
     i.fas.fa-plus
+  // Simple select dropdown for item categories
+  select#categoryDropdown.ml-3(onchange='filterItems(this.value)')
+    option(value='All') All
+    each category in data.categories
+      option(value=category.id) #{category.name}
 // Search bar
 input#itemSearch(type='text', class='form-control mb-3', placeholder='Search items...')
 // Header row
@@ -10,7 +15,6 @@ input#itemSearch(type='text', class='form-control mb-3', placeholder='Search ite
 //-   span Details
 ul.items-list.list-group.scrollable-list
   // Your list items will be populated here as before
-
 
 // Bootstrap Modal structure
 div#itemModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='modalLabel', aria-hidden='true')
@@ -25,10 +29,12 @@ div#itemModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='modalLab
           input(type='hidden', name='itemId')
           input(type='text', name='name', placeholder='Item Name', class='form-control')
           input(type='text', name='details', placeholder='Description', class='form-control')
-          // Moved the Save changes button inside the form
+          select(name='category_id', class='form-control')
+            option(value='') Select Category
+            each category in data.categories
+              option(value=category.id) #{category.name}
       div.modal-footer
         button.btn.btn-primary#saveItemButton(type='button') Save changes
         button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-
 
 script(src="/js/items.js")

@@ -28,16 +28,104 @@ h1 {
   color: #5d3a3a;
 }
 
+.rotate {
+  transform: rotate(90deg); /* Adjust the degree as necessary */
+  transition: transform 0.3s ease; /* Smooth transition for rotation */
+}
+
+.containerItemRow {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.details-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+.details-container {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap to the next line as needed */
+}
+
+.detailInputs {
+  flex: 1 1 50%; /* Grow to fill the space, but start with a basis of 50% */
+  /* Optional: add some padding or margin for spacing between the divs */
+}
+
+.item {
+  position: relative;
+}
+
+.saveItem {
+  background-color: #3da86b; /* Harmonizing with the color scheme */
+  color: #fff; /* Contrast for readability */
+  border: none; /* Modern, flat design */
+  padding: 10px 20px; /* Adequate padding for touch targets */
+  font-size: 16px; /* Readable text size */
+  cursor: pointer; /* Indicates interactivity */
+  border-radius: 5px; /* Softened corners */
+  transition: background-color 0.3s ease; /* Smooth transition for interaction */
+  box-shadow: 0 2px 4px rgba(41, 152, 83, 0.2); /* Subtle shadow for depth */
+}
+
+.saveItem:hover {
+  background-color: #8bc43a; /* Slightly lighter on hover for feedback */
+}
+
+
+.bottomright {
+  position:absolute;
+  bottom:20px;
+  right:20px;
+}
+
+.topright {
+  position:absolute;
+  top:15%;
+  right:20px;
+}
+
+.item-icon {
+  position: absolute;
+  top: 12px;
+  left: 2px;
+  /* Adjust the size, color, or any other properties as needed */
+}
+
+.detailInputs, .rightInputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rightInputs {
+  flex: 1; /* Takes up the other half */
+  /* Aligns the two inputs vertically */
+  max-width: 50%; /* Adjusts the maximum width to prevent overly wide inputs */
+}
+.leftInputs {
+  flex: 1; /* Takes up the other half */
+  /* Aligns the two inputs vertically */
+  max-width: 50%; /* Adjusts the maximum width to prevent overly wide inputs */
+}
+
 .items-list {
-  max-height: 400px; /* Adjust based on your needs */
+  max-height: 800px; /* Adjust based on your needs */
   overflow-y: auto; /* Enable vertical scrolling */
   position: relative; /* Needed for sticky positioning context */
 }
 .item {
-  background-color: #fff3e6;
-  margin-bottom: 10px;
+  /* background-color: #fff3e6; */
+  /* margin-bottom: 10px; */
   padding: 10px;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   display: flex;
   flex-direction: column;
 }
@@ -48,8 +136,18 @@ h1 {
 }
 
 .scrollable-list {
-  max-height: 400px;
+  max-height: 740px;
   overflow-y: auto;
+}
+.arrow {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.3s ease;
+  align-self: flex-start; /* Aligns the arrow to the top */
+}
+
+.arrow.expanded {
+  transform: rotate(90deg);
 }
 
 .list-header {
@@ -99,7 +197,7 @@ li .containeritemrow {
   display: flex; /* Lay out the spans horizontally */
   justify-content: space-between; /* Space out the spans */
   width: 100%; /* Take up the full width */
-  padding: 0 8px; /* Optional padding for spacing, adjust as needed */
+  padding: 0  0 10px 15px; /* Optional padding for spacing, adjust as needed */
 }
 
 .containeritemrow .editable {

@@ -8,6 +8,8 @@ $(document).ready(function() {
     $('#itemForm').submit(); // This triggers the form submission
   });
 
+  
+
   $('#itemForm').submit(function(event) {
     // Prevent the default form submission
     event.preventDefault();
@@ -18,7 +20,8 @@ $(document).ready(function() {
     formData.forEach(function(item) {
       formDataObject[item.name] = item.value;
     });
-    // console.log(formDataObject)
+    // formDataObject['category_id'] = $('#newItemCategoryDropdown').val();
+    console.log(formDataObject)
     
     saveItem(0, formDataObject);
   });
@@ -38,38 +41,35 @@ $(document).ready(function() {
   
   // Function to make items editable
   function makeEditable() {
-    $('.items-list').on('click', '.editable', function() {
-      if ($(this).is('input')) {
-        return;
-      }
-
-      let $this = $(this);
-      let currentText = $this.text();
-      let inputField = $('<input>', {
-        'type': 'text',
-        'value': currentText,
-        'class': $this.attr('class'), // Preserve the class=
-        'blur': blurSave,
-        'data-name': $this.data('name'),
-        'keypress': function(e) {
-          if (e.which === 13) { // Enter key
-            $(this).blur();
+    // Delegating from a static parent to .editable elements
+    $(document).on('click', '.editable', function() {
+      console.log('Editable clicked');
+      if (!$(this).is('input')) {
+        let currentText = $(this).text();
+        let inputField = $('<input>', {
+          type: 'text',
+          value: currentText,
+          class: $(this).attr('class'), // Preserve classes
+          blur: blurSave,
+          data: { name: $(this).data('name') },
+          keypress: function(e) {
+            if (e.which === 13) { // Enter key pressed
+              $(this).blur();
+            }
           }
-        }
-      });
-      $this.replaceWith(inputField);
-      inputField.focus();
+        });
+        $(this).replaceWith(inputField);
+        inputField.focus();
+      }
     });
   }
 
   function blurSave() {
 
-    console.log(this)
     let updatedValue = $(this).val();
     let itemId = $(this).closest('li').data('itemid');
     let fieldName = $(this).data('name');
 
-    console.log($(this).data())
 
     $(this).closest('li').data(fieldName, updatedValue);
 
@@ -81,8 +81,6 @@ $(document).ready(function() {
     $(this).replaceWith($span);
 
     let itemData = $('li[data-itemid="'+itemId+'"]').data() || {};
-
-    // console.log(itemData)
 
     saveItem(itemId, itemData);
   }
@@ -117,40 +115,112 @@ $(document).ready(function() {
     });
   }
 
-  // Function to populate items list
+  // Function to populate items list with a click event for the arrow
   function populateItems() {
     $.ajax({
       url: 'items/getItems', // Update this URL to where your items can be fetched
       type: 'GET',
-      success: function(items) {
-        let $itemsList = $('.items-list');
-        $itemsList.empty(); // Ensure the list is empty before adding items
-        
-        items.forEach(function(item) {
-          let $li = $('<li>', {
-            'class': 'list-group-item d-flex justify-content-between align-items-center',
-            'data-itemId': item.id,
-            'data-name': item.name,
-            'data-details': item.details
+      success: function(data) {
+        let itemsHtml = '';
+        const items = data.items;
+        const categories = data.categories;
+
+        // console.log(categories)
+        items.forEach(item => {
+          let itemcategory = categories.find(category => category.id === item.category_id);
+
+          // console.log(itemcategory)
+          let detailsArray = itemcategory.details ? itemcategory.details.split(',') : [];
+          // console.log(detailsArray)
+          let detailInputs = `
+                    <div class="form-group">
+                      <label>Rarity</label>
+                      <input type="text" class="form-control saveableItem" value="${item.rarity}" data-name="rarity">
+                    </div>
+                    <div class="form-group">
+                      <label>Value</label>
+                      <input type="text" class="form-control saveableItem" value="${item.value}" data-name="value">
+                    </div>
+                    <div class="form-group">
+                      <label>Weight</label>
+                      <input type="text" class="form-control saveableItem" value="${item.weight}" data-name="weight">
+                    </div>`;
+          detailsArray.forEach(detail => {
+            detailInputs += `
+              <div class="form-group">
+                <label>${detail}</label>
+                <input type="text" class="form-control saveableItem" value="${item[detail]}" data-name="${detail}">
+              </div>
+            `;
           });
-          let $nameSpan = $('<span>', {
-            'class': 'name editable',
-            'data-name': 'name',
-            'text': item.name
-          });
-          let $detailsSpan = $('<span>', {
-            'class': 'details editable',
-            'data-name': 'details',
-            'text': item.details
-          });
-          
-          // Append the name and details span, and edit/delete buttons to the list item
-          $li.append($nameSpan).append($detailsSpan);
-          $itemsList.append($li);
+          // $detailsContainer.html(detailInputs);
+          itemsHtml += `
+            <li class="list-group-item d-flex align-items-start item" 
+              data-itemId="${item.id}"
+              data-name="${item.name}"
+              data-details="${item.details}"
+              data-category_id="${item.category_id}">
+              <div class="spans-container">
+                <span class="name editable" data-name="name">${item.name}</span>
+                <span class="details editable" data-name="details">${item.details}</span>
+              </div>
+              <span class="arrow">&#9654;</span>
+              <i class="${itemcategory.icon} item-icon" aria-hidden="true"></i>
+              <div class="containeritemrow justify-content-between align-items-center" style="flex-grow: 1;">
+                <div class="details-container" style="display:none;">
+                  <div class="detailInputs rightInputs" style="">
+                    ` + detailInputs + `
+                  </div>
+                  <div class="detailInputs leftInputs" style="">
+                    <button class="button topright saveItem saveItemDetailsButton">Save</button>
+                  </div>
+                </div>
+              </div>
+            </li>`;
         });
+        $('.items-list').html(itemsHtml);
 
         // Call makeEditable after items are populated
         makeEditable();
+
+                
+        $('.items-list').on('click', '.saveItemDetailsButton', function() {
+          // Find the closest parent list item (<li>)
+          let $parentListItem = $(this).closest('li');
+      
+          // Find all elements with class 'saveableItem' within this list item
+          let $saveableItems = $parentListItem.find('.saveableItem');
+          // Collect all form data within this item
+          let formData = {};
+          $saveableItems.each(function() {
+            
+            let name = $(this).data('name');
+            let value = $(this).val();
+            formData[name] = value;
+          });
+      
+          // Optionally, add the item's ID to formData if needed
+          formData['itemId'] = $parentListItem.data('itemid');
+
+          console.log(formData)
+      
+          // Send the data to the server
+          $.ajax({
+            url: 'items/saveItem', // Your endpoint here
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+              console.log('Item details saved successfully:', response);
+              // Update UI or notify user as needed
+            },
+            error: function(xhr, status, error) {
+              console.error('Error saving item details:', error);
+              // Handle error
+            }
+          });
+        });
+
       },
       error: function(xhr, status, error) {
         console.error("Error fetching items: ", error);
@@ -158,5 +228,31 @@ $(document).ready(function() {
     });
   }
 
+  // Toggle details container visibility and fetch category-specific attributes
+  $('.items-list').on('click', '.arrow', function() {
+    let $detailsContainer = $(this).siblings('.containeritemrow').find('.details-container');
+    let $item = $(this).closest('.item');
+    let itemId = $item.data('itemid');
+
+    $(this).toggleClass('rotate'); // Add this line to toggle the rotate class
+
+    $detailsContainer.toggle();
+  });
+
   populateItems();
 });
+
+
+function filterItems(selectedCategory) {
+  const items = document.querySelectorAll('.items-list .list-group-item');
+  items.forEach(item => {
+    // Assuming each item has a data-category attribute
+    const category_id = item.getAttribute('data-category');
+    // console.log(item.getAttributeNames, item.getAttribute('data-category'))
+    if (selectedCategory === 'All' || category_id === selectedCategory) {
+      $(item).removeClass('hide-item');
+    } else {
+      $(item).addClass('hide-item');
+    }
+  });
+}

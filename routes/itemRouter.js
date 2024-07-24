@@ -6,6 +6,8 @@ const itemRouter = express.Router();
 
 // load items list
 itemRouter.get('/getItems', itemController.getItems);
+itemRouter.get('/getItemCategories', itemController.getItemCategories);
+itemRouter.get('/getContainers', itemController.getContainers);
 
 // Route to process the add form, now returns JSON
 itemRouter.post('/add', itemController.addItem);

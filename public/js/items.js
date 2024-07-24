@@ -4,6 +4,9 @@ $(document).ready(function() {
   $('#addNewItemButton').click(function() {
     $('#itemModal').modal('show');
   });
+  $('#saveItemButton').click(function() {
+    $('#itemForm').submit(); // This triggers the form submission
+  });
 
   $('#itemForm').submit(function(event) {
     // Prevent the default form submission

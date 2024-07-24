@@ -54,6 +54,17 @@ class Item {
     });
   }
 
+  static async getItemCategories() {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT * FROM item_categories', (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(results);
+      });
+    });
+  }
+
 }
 
 module.exports = Item;

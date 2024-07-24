@@ -1,0 +1,30 @@
+div.d-flex.align-items-center.justify-content-start
+  h1.mb-0 Containers
+  button.btn.btn-success#addNewContainerButton.ml-3
+    i.fas.fa-plus
+// Search bar
+input#containerSearch(type='text', class='form-control mb-3', placeholder='Search containers...')
+ul#containerList.containers-list.list-group.scrollable-list
+  // Your list items will be populated here as before
+
+
+// Bootstrap Modal structure
+div#containerModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='modalLabel', aria-hidden='true')
+  div.modal-dialog(role='document')
+    div.modal-content
+      div.modal-header
+        h5.modal-title Add a New Container
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+      div.modal-body
+        form#containerForm
+          input(type='hidden', name='containerId')
+          input(type='text', name='name', placeholder='Container Name', class='form-control')
+          input(type='text', name='details', placeholder='Description', class='form-control')
+          // Moved the Save changes button inside the form
+      div.modal-footer
+        button.btn.btn-primary#saveContainerButton(type='button') Save changes
+        button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+
+
+script(src="/js/containers.js")

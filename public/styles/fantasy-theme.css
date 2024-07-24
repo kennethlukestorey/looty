@@ -29,16 +29,85 @@ h1 {
 }
 
 .items-list {
-  /* Ensure the list takes the full height if needed */
-  height: 100vh;
-  overflow-y: auto;
+  max-height: 400px; /* Adjust based on your needs */
+  overflow-y: auto; /* Enable vertical scrolling */
+  position: relative; /* Needed for sticky positioning context */
 }
-
 .item {
   background-color: #fff3e6;
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+/* CSS */
+.expanded {
+  height: auto; /* Adjust this value as needed */
+  overflow: hidden; /* Keep the content within the container */
+}
+
+.scrollable-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.list-header {
+  display: flex;
+  background-color: #f8f9fa; /* Light grey background */
+  padding: 8px 20px; /* Add some padding */
+  position: sticky;
+  top: 0; /* Stick to the top of the container */
+  z-index: 100; /* Ensure it stays above other content */
+}
+.containerItemRow {
+  width: 100%; /* Make the element take up the full width */
+  box-sizing: border-box; /* Include padding and border in the element's width */
+}
+
+.dropdowns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* This will space out the dropdowns evenly */
+}
+
+.category-dropdown {
+  flex-basis: calc(33.333% - 10px); /* Adjust the -10px based on your gap */
+  margin-bottom: 10px; /* Space between rows */
+}
+
+li .containeritemrow {
+  width: 100%; /* Ensure it takes up the full width of its parent <li> */
+  display: flex; /* Use flexbox to manage the layout */
+  justify-content: space-between; /* This will space out the child elements */
+  align-items: center; /* Align items vertically */
+  padding: 0 0px; /* Add some padding on the sides for spacing, adjust as needed */
+  box-sizing: border-box; /* Include padding in the element's total width */
+}
+
+/* No changes needed here, this ensures .containeritemrow uses a column layout */
+.containeritemrow {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+  padding: 8px;
+}
+
+/* New CSS for the spans container */
+.spans-container {
+  display: flex; /* Lay out the spans horizontally */
+  justify-content: space-between; /* Space out the spans */
+  width: 100%; /* Take up the full width */
+  padding: 0 8px; /* Optional padding for spacing, adjust as needed */
+}
+
+.containeritemrow .editable {
+  margin-bottom: 8px; /* Add some space below each span */
+}
+
+.dropdowns {
+  width: 100%; /* Ensure the dropdown takes up the full width */
 }
 
 .hide-item {

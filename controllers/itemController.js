@@ -1,9 +1,14 @@
 // controllers/itemController.js
 const Item = require('../models/Item');
+const Container = require('../models/Container');
 
 
 exports.itemsPage = async (req, res) => {
-  res.render('items');
+  // Fetch categories from the database
+  const categories = await Item.getItemCategories();
+  
+  // Render the containers.pug view, passing in the categories
+  res.render('items/home', { categories });
 };
 
 exports.getItems = async (req, res) => {
@@ -15,6 +20,30 @@ exports.getItems = async (req, res) => {
     res.status(500).send('Error fetching items');
   }
 };
+
+exports.getItemCategories = async (req, res) => {
+  try {
+    const items = await Item.getItemCategories();
+    res.json(items);
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).send('Error fetching items');
+  }
+};
+
+exports.getContainers = async (req, res) => {
+  try {
+    const containers = await Container.findAll();
+    const itemCategories = await Item.getItemCategories();
+    const data = {};
+    data.containers = containers;
+    data.itemCategories = itemCategories;
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).send('Error fetching items');
+  }
+}
 
 exports.displayAddItemForm = (req, res) => {
     res.render('addItem'); // Assuming you have a Pug template named addItem.pug
